@@ -11,8 +11,30 @@ using Microsoft.AspNetCore.Mvc;
 [TestClass]
 public class StudentControllerTest
 {
-        [TestInitialize]
-        public void InitTest()
+    private readonly Mock<IStudentLogic> _studentServiceMock = new Mock<IStudentLogic>(MockBehavior.Strict);
+
+    private StudentController controller;
+
+    [TestInitialize]
+    public void InitTest()
+    {
+        controller = new StudentController(_studentServiceMock.Object);
+    }
+
+    [TestMethod]
+    public void CreateStudentFail()
+    {
+        Assert.Fail();
+    }
+
+    [TestMethod]
+    public void CreateStudent()
+    {
+        _studentServiceMock.Setup(x => x.InsertStudents(It.IsAny<Student>()));
+        controller.CreateStudent(new Student()
         {
-        }
+            Name = "Test"
+        });
+        _studentServiceMock.VerifyAll();
+    }
 }
